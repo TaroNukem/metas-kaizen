@@ -35,6 +35,20 @@ export default function Metas(){
       setMetas(data || [])
     }
 
+    async function concluirMeta(id: string, concluida: boolean){
+        const { error } = await supabase
+        .from("metas")
+        .update({ concluida: concluida })
+        .eq("id", id)
+
+        if(error){
+            alert("Erro ao atualizar meta: " + error.message)
+            return
+        }
+
+        buscarMetas()
+    }
+
     async function adicionarMetas(e: React.FormEvent){
         e.preventDefault()
 
@@ -94,7 +108,9 @@ export default function Metas(){
         <ul>
           {metas.map((meta) => (
             <li key={meta.id}>
-              {meta.titulo} - {meta.data}
+              <input type="checkbox" checked={meta.concluida} onChange={(e)=> concluirMeta(meta.id, e.target.checked)} />
+
+              <span>{meta.titulo}</span> - {meta.data}
             </li>
           ))}
         </ul>
