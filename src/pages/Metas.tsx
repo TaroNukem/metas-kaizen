@@ -10,8 +10,10 @@ type Meta ={
 
 export default function Metas(){
     const [titulo, setTitulo] = useState("")
-    const [data, setData] = useState("")
     const [metas, setMetas] = useState<Meta[]>([])
+
+    const hoje = new Date().toLocaleDateString("en-CA")
+    const [data, setData] = useState(hoje)
 
     async function buscarMetas(){
         const { data:usuarioData } = await supabase.auth.getUser()
@@ -35,6 +37,10 @@ export default function Metas(){
       setMetas(data || [])
     }
 
+    function formatarData(data: string) {
+    return new Date(data + "T00:00:00").toLocaleDateString("pt-BR");
+}
+
     async function concluirMeta(id: string, concluida: boolean){
         const { error } = await supabase
         .from("metas")
@@ -48,6 +54,30 @@ export default function Metas(){
 
         buscarMetas()
     }
+
+    async function excluirMeta(id: string) {
+    const confirmar = window.confirm(
+        "Tem certeza que deseja excluir esta meta?"
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    const { error } = await supabase
+        .from("metas")
+        .delete()
+        .eq("id", id);
+
+    if (error) {
+        alert("Erro ao excluir meta: " + error.message);
+        return;
+    }
+
+    alert("Meta excluída com sucesso!");
+
+    buscarMetas();
+}
 
     async function adicionarMetas(e: React.FormEvent){
         e.preventDefault()
@@ -72,9 +102,10 @@ export default function Metas(){
 
         alert("Meta adicionada com sucesso!")
 
-        useEffect(() => {
-    buscarMetas();
-}, []);
+        setTitulo("")
+    setData("")
+
+    buscarMetas()
     }
 
     useEffect(() => {
@@ -94,7 +125,7 @@ export default function Metas(){
                 <div>
                     <label htmlFor="data">Data da meta</label>
                     <input type="date" id="data" value={data} onChange={(e)=> setData(e.target.value)}
-                    required/>
+                    required min={hoje}/>
                 </div>
 
                 <button type="submit">Adicionar meta</button>
@@ -107,12 +138,20 @@ export default function Metas(){
       ) : (
         <ul>
           {metas.map((meta) => (
-            <li key={meta.id}>
-              <input type="checkbox" checked={meta.concluida} onChange={(e)=> concluirMeta(meta.id, e.target.checked)} />
+    <li key={meta.id}>
+        <input
+            type="checkbox"
+            checked={meta.concluida}
+            onChange={(e) => concluirMeta(meta.id, e.target.checked)}
+        />
 
-              <span>{meta.titulo}</span> - {meta.data}
-            </li>
-          ))}
+        <span>{meta.titulo}</span> - {formatarData(meta.data)}
+
+        <button onClick={() => excluirMeta(meta.id)}>
+            Excluir
+        </button>
+    </li>
+))}
         </ul>
       )}
     </div>
