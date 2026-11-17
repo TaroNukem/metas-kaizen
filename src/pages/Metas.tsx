@@ -41,6 +41,18 @@ export default function Metas(){
     return new Date(data + "T00:00:00").toLocaleDateString("pt-BR");
 }
 
+    function agruparMetas() {
+    return metas.reduce((grupos, meta) => {
+        if (!grupos[meta.data]) {
+            grupos[meta.data] = [];
+        }
+
+        grupos[meta.data].push(meta);
+
+        return grupos;
+    }, {} as Record<string, Meta[]>);
+}
+
     async function concluirMeta(id: string, concluida: boolean){
         const { error } = await supabase
         .from("metas")
@@ -133,27 +145,37 @@ export default function Metas(){
 
             <h2>Minhas metas cadastradas</h2>
 
-            {metas.length === 0 ? (
-        <p>Você ainda não possui metas cadastradas.</p>
-      ) : (
-        <ul>
-          {metas.map((meta) => (
-    <li key={meta.id}>
-        <input
-            type="checkbox"
-            checked={meta.concluida}
-            onChange={(e) => concluirMeta(meta.id, e.target.checked)}
-        />
+{metas.length === 0 ? (
+    <p>Você ainda não possui metas cadastradas.</p>
+) : (
+    Object.entries(agruparMetas())
+        .sort(([dataA], [dataB]) => dataA.localeCompare(dataB))
+        .map(([data, metasDoDia]) => (
+            <div key={data}>
+                <h3>{formatarData(data)}</h3>
 
-        <span>{meta.titulo}</span> - {formatarData(meta.data)}
+                <ul>
+                    {metasDoDia.map((meta) => (
+                        <li key={meta.id}>
+                            <input
+                                type="checkbox"
+                                checked={meta.concluida}
+                                onChange={(e) =>
+                                    concluirMeta(meta.id, e.target.checked)
+                                }
+                            />
 
-        <button onClick={() => excluirMeta(meta.id)}>
-            Excluir
-        </button>
-    </li>
-))}
-        </ul>
-      )}
+                            <span>{meta.titulo}</span>
+
+                            <button onClick={() => excluirMeta(meta.id)}>
+                                Excluir
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        ))
+)}
     </div>
   );
 }
