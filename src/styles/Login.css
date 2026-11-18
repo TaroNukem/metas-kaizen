@@ -1,0 +1,333 @@
+@import url('https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    font-family: 'Patrick Hand', sans-serif;
+
+    background-color: #4B63D4;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.login-container {
+    width: 100%;
+    min-height: 100vh;
+
+    margin: 0;
+    padding: 32px 24px;
+
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 440px));
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+
+    background: transparent;
+}
+/* ========================================
+   2. CONTAINER PRINCIPAL
+======================================== */
+
+.login-container {
+    width: 100%;
+    max-width: 1020px;
+    min-height: 100vh;
+
+    margin: 0 auto;
+    padding: 32px 24px;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 24px;
+
+    /* IMPORTANTE: não colocar fundo aqui */
+    background: transparent;
+}
+
+/* ========================================
+   3. CARD DA ILUSTRAÇÃO
+======================================== */
+
+.login-illustration {
+    width: 100%;
+    min-height: 540px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    padding: 32px;
+
+    background-color: #FFFFFF;
+    border-radius: 24px;
+
+    box-shadow: 4px 5px 0 rgba(4, 20, 148, 0.15);
+
+    text-align: center;
+}
+
+.login-illustration img {
+    display: block;
+    width: 100%;
+    max-width: 380px;
+    height: auto;
+
+    object-fit: contain;
+    mix-blend-mode: multiply;
+}
+
+.illustration-text {
+    margin-top: 24px;
+}
+
+.illustration-text h2 {
+    color: #041494;
+    font-size: 30px;
+    font-weight: 400;
+    line-height: 1.15;
+    margin: 4px 0;
+}
+
+.illustration-text p {
+    color: #4B63D4;
+    font-size: 18px;
+    line-height: 1.4;
+    margin-top: 12px;
+}
+
+/* ========================================
+   4. CARD DO FORMULÁRIO
+======================================== */
+
+.login-content {
+    width: 100%;
+    min-height: 540px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 40px;
+
+    background-color: #FFFFFF;
+    border-radius: 24px;
+
+    box-shadow: 4px 5px 0 rgba(4, 20, 148, 0.15);
+}
+
+.login-card {
+    width: 100%;
+    max-width: 350px;
+}
+
+/* ========================================
+   5. CABEÇALHO
+======================================== */
+
+.login-header {
+    margin-bottom: 48px;
+}
+
+.login-header h1 {
+    color: #041494;
+    font-size: 42px;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 10px;
+}
+
+.login-header p {
+    color: #4B63D4;
+    font-size: 19px;
+    line-height: 1.4;
+}
+
+/* ========================================
+   6. CAMPOS
+======================================== */
+
+.login-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.login-input {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.login-input label {
+    color: #041494;
+    font-size: 19px;
+}
+
+.login-input input {
+    width: 100%;
+    height: 48px;
+    padding: 0 15px;
+
+    background-color: #FFFFFF;
+    color: #041494;
+
+    border: 2px solid #4B63D4;
+    border-radius: 18px 22px 16px 24px;
+
+    outline: none;
+
+    font-family: 'Patrick Hand', sans-serif;
+    font-size: 17px;
+
+    box-shadow: 2px 2px 0 #4B63D4;
+
+    transition: 0.2s ease;
+}
+
+.login-input input::placeholder {
+    color: #8998D5;
+}
+
+.login-input input:focus {
+    border-color: #041494;
+    box-shadow: 3px 3px 0 #4B63D4;
+}
+
+/* ========================================
+   7. BOTÃO
+======================================== */
+
+.login-button {
+    width: 100%;
+    height: 48px;
+    margin-top: 6px;
+
+    background-color: #041494;
+    color: #FFFFFF;
+
+    border: 2px solid #041494;
+    border-radius: 17px 22px 16px 20px;
+
+    box-shadow: 3px 3px 0 #4B63D4;
+
+    font-family: 'Patrick Hand', sans-serif;
+    font-size: 20px;
+
+    cursor: pointer;
+    transition: 0.15s ease;
+}
+
+.login-button:hover {
+    transform: translate(-1px, -1px);
+    box-shadow: 4px 4px 0 #4B63D4;
+}
+
+.login-button:active {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+}
+
+/* ========================================
+   8. CADASTRO
+======================================== */
+
+.login-register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+
+    margin-top: 25px;
+
+    color: #4B63D4;
+    font-size: 18px;
+}
+
+.login-register a {
+    color: #041494;
+
+    text-decoration: underline;
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4px;
+}
+
+.login-register a:hover {
+    color: #4B63D4;
+}
+
+/* ========================================
+   9. RODAPÉ
+======================================== */
+
+.login-footer {
+    margin-top: 32px;
+
+    color: #4B63D4;
+    font-size: 16px;
+    line-height: 1.4;
+    text-align: center;
+}
+
+/* ========================================
+   10. RESPONSIVIDADE
+======================================== */
+
+@media (max-width: 700px) {
+    .login-container {
+        max-width: 440px;
+        grid-template-columns: 1fr;
+        gap: 22px;
+        padding: 24px 16px;
+    }
+
+    .login-illustration {
+        min-height: auto;
+        padding: 25px 20px;
+    }
+
+    .login-illustration img {
+        max-width: 260px;
+    }
+
+    .illustration-text {
+        margin-top: 15px;
+    }
+
+    .illustration-text h2 {
+        font-size: 27px;
+    }
+
+    .illustration-text p {
+        font-size: 17px;
+    }
+
+    .login-content {
+        min-height: auto;
+        padding: 35px 25px;
+    }
+
+    .login-header {
+        margin-bottom: 35px;
+    }
+
+    .login-header h1 {
+        font-size: 36px;
+    }
+}
