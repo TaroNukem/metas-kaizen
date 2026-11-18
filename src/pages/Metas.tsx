@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useMemo, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
@@ -65,13 +64,13 @@ function adicionarMeses(data: Date, quantidade: number): Date {
   const novaData = new Date(
     data.getFullYear(),
     data.getMonth() + quantidade,
-    1
+    1,
   );
 
   const ultimoDia = new Date(
     novaData.getFullYear(),
     novaData.getMonth() + 1,
-    0
+    0,
   ).getDate();
 
   novaData.setDate(Math.min(diaOriginal, ultimoDia));
@@ -81,7 +80,7 @@ function adicionarMeses(data: Date, quantidade: number): Date {
 function proximaDataRecorrente(
   data: string,
   recorrencia: RecorrenciaBanco,
-  diasSemana: number[]
+  diasSemana: number[],
 ): string {
   const atual = converterDataISO(data);
 
@@ -112,7 +111,7 @@ function proximaDataRecorrente(
 
 function primeiraDataSelecionada(
   dataInicial: string,
-  diasSemana: number[]
+  diasSemana: number[],
 ): string {
   const inicio = converterDataISO(dataInicial);
 
@@ -147,8 +146,7 @@ function Metas() {
   const [dataVisualizada, setDataVisualizada] = useState(new Date());
   const [modoCalendario, setModoCalendario] = useState<"mes" | "semana">("mes");
 
-  const [tipoRepeticao, setTipoRepeticao] =
-    useState<TipoRepeticao>("nenhuma");
+  const [tipoRepeticao, setTipoRepeticao] = useState<TipoRepeticao>("nenhuma");
   const [diasSelecionados, setDiasSelecionados] = useState<number[]>([]);
 
   const [editandoId, setEditandoId] = useState<string | null>(null);
@@ -162,7 +160,7 @@ function Metas() {
         .split(/\r?\n/)
         .map((frase) => frase.trim())
         .filter(Boolean),
-    []
+    [],
   );
 
   const fraseDoDia = useMemo(() => {
@@ -173,7 +171,7 @@ function Metas() {
     const hoje = new Date();
     const inicioAno = new Date(hoje.getFullYear(), 0, 0);
     const diaAno = Math.floor(
-      (hoje.getTime() - inicioAno.getTime()) / 86400000
+      (hoje.getTime() - inicioAno.getTime()) / 86400000,
     );
 
     return frases[diaAno % frases.length];
@@ -206,7 +204,7 @@ function Metas() {
         recorrencia: meta.recorrencia ?? "nenhuma",
         recorrencia_id: meta.recorrencia_id ?? null,
         dias_semana: meta.dias_semana ?? [],
-      })) as Meta[]
+      })) as Meta[],
     );
   }
 
@@ -233,7 +231,7 @@ function Metas() {
     setDiasSelecionados((atuais) =>
       atuais.includes(numero)
         ? atuais.filter((dia) => dia !== numero)
-        : [...atuais, numero].sort()
+        : [...atuais, numero].sort(),
     );
   }
 
@@ -272,138 +270,166 @@ function Metas() {
     };
   }
 
-  
-async function adicionarOuEditarMeta(
-  event: FormEvent<HTMLFormElement>
-) {
-  event.preventDefault();
+  async function adicionarOuEditarMeta(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
 
-  const tituloLimpo = titulo.trim();
+    const tituloLimpo = titulo.trim();
 
-  if (!tituloLimpo) {
-    setErro("Digite um título para sua meta.");
-    return;
-  }
-
-  if (dataSelecionada < obterHoje()) {
-    setErro("Não é possível criar metas em datas passadas.");
-    return;
-  }
-
-  setSalvando(true);
-  setErro("");
-
-  try {
-    const { data: usuarioData, error: usuarioErro } =
-      await supabase.auth.getUser();
-
-    if (usuarioErro || !usuarioData.user) {
-      navigate("/login");
+    if (!tituloLimpo) {
+      setErro("Digite um título para sua meta.");
       return;
     }
 
-    const userId = usuarioData.user.id;
-    const dadosRecorrencia = prepararDadosRecorrencia(dataSelecionada);
+    if (dataSelecionada < obterHoje()) {
+      setErro("Não é possível criar metas em datas passadas.");
+      return;
+    }
 
-    if (editandoId) {
-      const { error: atualizarErro } = await supabase
-        .from("metas")
-        .update({
-          titulo: tituloLimpo,
-          data: dadosRecorrencia.data,
-          recorrencia: dadosRecorrencia.recorrencia,
-          dias_semana: dadosRecorrencia.dias_semana,
-        })
-        .eq("id", editandoId)
-        .eq("user_id", userId);
+    setSalvando(true);
+    setErro("");
 
-      if (atualizarErro) {
-        throw atualizarErro;
+    try {
+      const { data: usuarioData, error: usuarioErro } =
+        await supabase.auth.getUser();
+
+      if (usuarioErro || !usuarioData.user) {
+        navigate("/login");
+        return;
       }
-    } else {
-      const recorrenciaId =
-        dadosRecorrencia.recorrencia !== "nenhuma"
-          ? crypto.randomUUID()
-          : null;
 
-      const dadosBase = {
-        titulo: tituloLimpo,
-        concluida: false,
-        user_id: userId,
-        categoria: "Outros",
-        prioridade: "media",
-        recorrencia: dadosRecorrencia.recorrencia,
-        recorrencia_id: recorrenciaId,
-        dias_semana: dadosRecorrencia.dias_semana,
-      };
+      const userId = usuarioData.user.id;
+      const dadosRecorrencia = prepararDadosRecorrencia(dataSelecionada);
 
-      // Quando selecionar dias específicos da semana,
-      // cria todas as ocorrências dos próximos 90 dias.
-      if (
-        tipoRepeticao === "dias_semana" &&
-        recorrenciaId
-      ) {
-        const ocorrencias = [];
-        const dataInicial = converterDataISO(dadosRecorrencia.data);
-
-        for (let i = 0; i < 90; i++) {
-          const dataAtual = adicionarDias(dataInicial, i);
-
-          if (diasSelecionados.includes(dataAtual.getDay())) {
-            ocorrencias.push({
-              ...dadosBase,
-              data: obterDataISO(dataAtual),
-            });
-          }
-        }
-
-        if (ocorrencias.length === 0) {
-          throw new Error("Não foi possível gerar as datas da recorrência.");
-        }
-
-        const { error: inserirErro } = await supabase
+      if (editandoId) {
+        const { error: atualizarErro } = await supabase
           .from("metas")
-          .insert(ocorrencias);
+          .update({
+            titulo: tituloLimpo,
+            data: dadosRecorrencia.data,
+            recorrencia: dadosRecorrencia.recorrencia,
+            dias_semana: dadosRecorrencia.dias_semana,
+          })
+          .eq("id", editandoId)
+          .eq("user_id", userId);
 
-        if (inserirErro) {
-          throw inserirErro;
+        if (atualizarErro) {
+          throw atualizarErro;
         }
       } else {
-        // Para as outras recorrências, cria a primeira ocorrência.
-        const { error: inserirErro } = await supabase
-          .from("metas")
-          .insert({
+        const recorrenciaId =
+          dadosRecorrencia.recorrencia !== "nenhuma"
+            ? crypto.randomUUID()
+            : null;
+
+        const dadosBase = {
+          titulo: tituloLimpo,
+          concluida: false,
+          user_id: userId,
+          categoria: "Outros",
+          prioridade: "media",
+          recorrencia: dadosRecorrencia.recorrencia,
+          recorrencia_id: recorrenciaId,
+          dias_semana: dadosRecorrencia.dias_semana,
+        };
+
+        if (recorrenciaId && tipoRepeticao !== "nenhuma") {
+          const ocorrencias: {
+            titulo: string;
+            concluida: boolean;
+            user_id: string;
+            categoria: string;
+            prioridade: string;
+            recorrencia: RecorrenciaBanco;
+            recorrencia_id: string | null;
+            dias_semana: number[];
+            data: string;
+          }[] = [];
+
+          const dataInicial = converterDataISO(dadosRecorrencia.data);
+          const limite = adicionarDias(dataInicial, 89);
+
+          if (tipoRepeticao === "dias_semana") {
+            for (let i = 0; i < 90; i++) {
+              const dataAtual = adicionarDias(dataInicial, i);
+
+              if (diasSelecionados.includes(dataAtual.getDay())) {
+                ocorrencias.push({
+                  ...dadosBase,
+                  data: obterDataISO(dataAtual),
+                });
+              }
+            }
+          }
+
+          if (tipoRepeticao === "semanal") {
+            for (let i = 0; i < 90; i += 7) {
+              const dataAtual = adicionarDias(dataInicial, i);
+
+              ocorrencias.push({
+                ...dadosBase,
+                data: obterDataISO(dataAtual),
+              });
+            }
+          }
+
+          if (tipoRepeticao === "mensal") {
+            for (let i = 0; ; i++) {
+              const dataAtual = adicionarMeses(dataInicial, i);
+
+              if (dataAtual > limite) {
+                break;
+              }
+
+              ocorrencias.push({
+                ...dadosBase,
+                data: obterDataISO(dataAtual),
+              });
+            }
+          }
+
+          if (ocorrencias.length === 0) {
+            throw new Error("Não foi possível gerar as datas da recorrência.");
+          }
+
+          const { error: inserirErro } = await supabase
+            .from("metas")
+            .insert(ocorrencias);
+
+          if (inserirErro) {
+            throw inserirErro;
+          }
+        } else {
+          const { error: inserirErro } = await supabase.from("metas").insert({
             ...dadosBase,
             data: dadosRecorrencia.data,
           });
 
-        if (inserirErro) {
-          throw inserirErro;
+          if (inserirErro) {
+            throw inserirErro;
+          }
         }
       }
-    }
 
-    limparFormulario();
-    await buscarMetas();
-  } catch (error: unknown) {
-    console.error("Erro ao adicionar/editar meta:", error);
+      limparFormulario();
+      await buscarMetas();
+    } catch (error: unknown) {
+      console.error("Erro ao adicionar/editar meta:", error);
 
-    if (error instanceof Error) {
-      setErro(error.message);
-    } else if (
-      typeof error === "object" &&
-      error !== null &&
-      "message" in error
-    ) {
-      setErro(String(error.message));
-    } else {
-      setErro("Não foi possível salvar sua meta. Verifique o console.");
+      if (error instanceof Error) {
+        setErro(error.message);
+      } else if (
+        typeof error === "object" &&
+        error !== null &&
+        "message" in error
+      ) {
+        setErro(String(error.message));
+      } else {
+        setErro("Não foi possível salvar sua meta. Verifique o console.");
+      }
+    } finally {
+      setSalvando(false);
     }
-  } finally {
-    setSalvando(false);
   }
-}
-
 
   function iniciarEdicao(meta: Meta) {
     setEditandoId(meta.id);
@@ -448,11 +474,10 @@ async function adicionarOuEditarMeta(
       const proximaData = proximaDataRecorrente(
         meta.data,
         meta.recorrencia,
-        meta.dias_semana ?? []
+        meta.dias_semana ?? [],
       );
 
-      const recorrenciaId =
-        meta.recorrencia_id ?? crypto.randomUUID();
+      const recorrenciaId = meta.recorrencia_id ?? crypto.randomUUID();
 
       // Garante que a ocorrência atual tenha o identificador da série.
       if (!meta.recorrencia_id) {
@@ -465,7 +490,7 @@ async function adicionarOuEditarMeta(
         if (atualizarSerieErro) {
           console.error("Erro ao atualizar série:", atualizarSerieErro);
           setErro(
-            `Meta concluída, mas houve erro na série: ${atualizarSerieErro.message}`
+            `Meta concluída, mas houve erro na série: ${atualizarSerieErro.message}`,
           );
           await buscarMetas();
           return;
@@ -485,24 +510,22 @@ async function adicionarOuEditarMeta(
         console.error("Erro ao verificar recorrência:", buscaErro);
         setErro(`Erro ao verificar próxima ocorrência: ${buscaErro.message}`);
       } else if (!existente) {
-        const { error: inserirErro } = await supabase
-          .from("metas")
-          .insert({
-            titulo: meta.titulo,
-            data: proximaData,
-            concluida: false,
-            user_id: userId,
-            categoria: meta.categoria ?? "Outros",
-            prioridade: meta.prioridade ?? "media",
-            recorrencia: meta.recorrencia,
-            recorrencia_id: recorrenciaId,
-            dias_semana: meta.dias_semana ?? [],
-          });
+        const { error: inserirErro } = await supabase.from("metas").insert({
+          titulo: meta.titulo,
+          data: proximaData,
+          concluida: false,
+          user_id: userId,
+          categoria: meta.categoria ?? "Outros",
+          prioridade: meta.prioridade ?? "media",
+          recorrencia: meta.recorrencia,
+          recorrencia_id: recorrenciaId,
+          dias_semana: meta.dias_semana ?? [],
+        });
 
         if (inserirErro) {
           console.error("Erro ao criar próxima ocorrência:", inserirErro);
           setErro(
-            `Meta concluída, mas não foi possível criar a próxima: ${inserirErro.message}`
+            `Meta concluída, mas não foi possível criar a próxima: ${inserirErro.message}`,
           );
         }
       }
@@ -511,58 +534,56 @@ async function adicionarOuEditarMeta(
     await buscarMetas();
   }
 
-  
-async function excluirMeta(id: string) {
-  const meta = metas.find((item) => item.id === id);
-  if (!meta) return;
+  async function excluirMeta(id: string) {
+    const meta = metas.find((item) => item.id === id);
+    if (!meta) return;
 
-  const { data: usuarioData, error: usuarioErro } =
-    await supabase.auth.getUser();
+    const { data: usuarioData, error: usuarioErro } =
+      await supabase.auth.getUser();
 
-  if (usuarioErro || !usuarioData.user) {
-    navigate("/login");
-    return;
-  }
-
-  const userId = usuarioData.user.id;
-
-  let excluirTodaSerie = false;
-
-  if (meta.recorrencia !== "nenhuma" && meta.recorrencia_id) {
-    excluirTodaSerie = window.confirm(
-      "Deseja excluir TODAS as ocorrências desta meta?\n\n" +
-      "Clique em OK para excluir toda a repetição.\n" +
-      "Clique em Cancelar para excluir somente esta ocorrência."
-    );
-  } else {
-    if (!window.confirm("Tem certeza de que deseja excluir esta meta?")) {
+    if (usuarioErro || !usuarioData.user) {
+      navigate("/login");
       return;
     }
+
+    const userId = usuarioData.user.id;
+
+    let excluirTodaSerie = false;
+
+    if (meta.recorrencia !== "nenhuma" && meta.recorrencia_id) {
+      excluirTodaSerie = window.confirm(
+        "Deseja excluir TODAS as ocorrências desta meta?\n\n" +
+          "Clique em OK para excluir toda a repetição.\n" +
+          "Clique em Cancelar para excluir somente esta ocorrência.",
+      );
+    } else {
+      if (!window.confirm("Tem certeza de que deseja excluir esta meta?")) {
+        return;
+      }
+    }
+
+    let query = supabase.from("metas").delete().eq("user_id", userId);
+
+    if (excluirTodaSerie && meta.recorrencia_id) {
+      query = query.eq("recorrencia_id", meta.recorrencia_id);
+    } else {
+      query = query.eq("id", id);
+    }
+
+    const { error: excluirErro } = await query;
+
+    if (excluirErro) {
+      console.error("Erro ao excluir meta:", excluirErro);
+      setErro(`Não foi possível excluir a meta: ${excluirErro.message}`);
+      return;
+    }
+
+    if (editandoId === id) {
+      limparFormulario();
+    }
+
+    await buscarMetas();
   }
-
-  let query = supabase.from("metas").delete().eq("user_id", userId);
-
-  if (excluirTodaSerie && meta.recorrencia_id) {
-    query = query.eq("recorrencia_id", meta.recorrencia_id);
-  } else {
-    query = query.eq("id", id);
-  }
-
-  const { error: excluirErro } = await query;
-
-  if (excluirErro) {
-    console.error("Erro ao excluir meta:", excluirErro);
-    setErro(`Não foi possível excluir a meta: ${excluirErro.message}`);
-    return;
-  }
-
-  if (editandoId === id) {
-    limparFormulario();
-  }
-
-  await buscarMetas();
-}
-
 
   function formatarData(data: string): string {
     if (data === obterHoje()) return "Hoje";
@@ -593,15 +614,11 @@ async function excluirMeta(id: string) {
   const totalMetas = metas.length;
 
   const percentualConcluido =
-    totalMetas > 0
-      ? Math.round((totalConcluidas / totalMetas) * 100)
-      : 0;
+    totalMetas > 0 ? Math.round((totalConcluidas / totalMetas) * 100) : 0;
 
   const ofensiva = useMemo(() => {
     const diasConcluidos = new Set(
-      metas
-        .filter((meta) => meta.concluida)
-        .map((meta) => meta.data)
+      metas.filter((meta) => meta.concluida).map((meta) => meta.data),
     );
 
     let dataAtual = converterDataISO(obterHoje());
@@ -625,7 +642,15 @@ async function excluirMeta(id: string) {
     year: "numeric",
   });
 
-  const diasSemanaCalendario = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+  const diasSemanaCalendario = [
+    "Dom",
+    "Seg",
+    "Ter",
+    "Qua",
+    "Qui",
+    "Sex",
+    "Sáb",
+  ];
 
   function gerarDiasCalendario(): Date[] {
     if (modoCalendario === "semana") {
@@ -633,31 +658,25 @@ async function excluirMeta(id: string) {
       primeiroDia.setDate(primeiroDia.getDate() - primeiroDia.getDay());
 
       return Array.from({ length: 7 }, (_, indice) =>
-        adicionarDias(primeiroDia, indice)
+        adicionarDias(primeiroDia, indice),
       );
     }
 
     const primeiroDiaMes = new Date(
       dataVisualizada.getFullYear(),
       dataVisualizada.getMonth(),
-      1
+      1,
     );
 
     const ultimoDiaMes = new Date(
       dataVisualizada.getFullYear(),
       dataVisualizada.getMonth() + 1,
-      0
+      0,
     );
 
-    const inicio = adicionarDias(
-      primeiroDiaMes,
-      -primeiroDiaMes.getDay()
-    );
+    const inicio = adicionarDias(primeiroDiaMes, -primeiroDiaMes.getDay());
 
-    const fim = adicionarDias(
-      ultimoDiaMes,
-      6 - ultimoDiaMes.getDay()
-    );
+    const fim = adicionarDias(ultimoDiaMes, 6 - ultimoDiaMes.getDay());
 
     const dias: Date[] = [];
     let atual = new Date(inicio);
@@ -756,7 +775,9 @@ async function excluirMeta(id: string) {
       {erro && (
         <div className="metas-error" role="alert">
           <span>{erro}</span>
-          <button type="button" onClick={() => setErro("")}>×</button>
+          <button type="button" onClick={() => setErro("")}>
+            ×
+          </button>
         </div>
       )}
 
@@ -820,13 +841,17 @@ async function excluirMeta(id: string) {
 
             <div className="calendar-grid">
               {diasSemanaCalendario.map((dia) => (
-                <div className="calendar-weekday" key={dia}>{dia}</div>
+                <div className="calendar-weekday" key={dia}>
+                  {dia}
+                </div>
               ))}
 
               {diasCalendario.map((dia) => {
                 const dataISO = obterDataISO(dia);
                 const metasDoDia = metasAgrupadas[dataISO] ?? [];
-                const concluidas = metasDoDia.filter((meta) => meta.concluida).length;
+                const concluidas = metasDoDia.filter(
+                  (meta) => meta.concluida,
+                ).length;
                 const percentual = metasDoDia.length
                   ? (concluidas / metasDoDia.length) * 100
                   : 0;
@@ -841,10 +866,14 @@ async function excluirMeta(id: string) {
                     key={dataISO}
                     className={[
                       "calendar-day",
-                      !mesmoMes && modoCalendario === "mes" ? "other-month" : "",
+                      !mesmoMes && modoCalendario === "mes"
+                        ? "other-month"
+                        : "",
                       selecionado ? "selected" : "",
                       hoje ? "today" : "",
-                    ].filter(Boolean).join(" ")}
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
                     onClick={() => setDataSelecionada(dataISO)}
                   >
                     <span className="day-number">{dia.getDate()}</span>
@@ -883,9 +912,15 @@ async function excluirMeta(id: string) {
             </div>
 
             <div className="calendar-legend">
-              <span><i className="legend-dot legend-today" /> Hoje</span>
-              <span><i className="legend-dot legend-selected" /> Selecionado</span>
-              <span><i className="legend-dot legend-completed" /> Meta concluída</span>
+              <span>
+                <i className="legend-dot legend-today" /> Hoje
+              </span>
+              <span>
+                <i className="legend-dot legend-selected" /> Selecionado
+              </span>
+              <span>
+                <i className="legend-dot legend-completed" /> Meta concluída
+              </span>
             </div>
           </section>
         </div>
@@ -908,8 +943,10 @@ async function excluirMeta(id: string) {
                   className="progress-fill"
                   style={{
                     width: `${
-                      (metasSelecionadas.filter((meta) => meta.concluida).length /
-                        metasSelecionadas.length) * 100
+                      (metasSelecionadas.filter((meta) => meta.concluida)
+                        .length /
+                        metasSelecionadas.length) *
+                      100
                     }%`,
                   }}
                 />
@@ -1062,12 +1099,15 @@ async function excluirMeta(id: string) {
               <p className="recurrence-help">
                 {tipoRepeticao === "nenhuma" &&
                   "A meta será criada somente uma vez."}
+
                 {tipoRepeticao === "diaria" &&
                   "A próxima ocorrência será criada para o dia seguinte quando você concluir a meta."}
+
                 {tipoRepeticao === "semanal" &&
-                  "A próxima ocorrência será criada sete dias depois da conclusão."}
+                  "As próximas ocorrências serão criadas automaticamente, uma vez por semana, pelos próximos 90 dias."}
+
                 {tipoRepeticao === "mensal" &&
-                  "A próxima ocorrência será criada no mesmo dia do mês seguinte."}
+                  "As próximas ocorrências serão criadas automaticamente, uma vez por mês, pelos próximos 90 dias."}
               </p>
             )}
 
