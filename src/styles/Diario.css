@@ -1,0 +1,625 @@
+
+.diario-container {
+    min-height: 100vh;
+    width: 100%;
+    padding: 28px 5% 60px;
+    background: #4B63D4;
+    color: #041494;
+    font-family: 'Patrick Hand', sans-serif;
+}
+
+/* Introdução */
+
+.diario-intro {
+    max-width: 1100px;
+    margin: 30px auto 24px;
+    padding: 24px 28px;
+    background: #fff;
+    border: 2px solid #041494;
+    border-radius: 18px 12px 20px 14px;
+    box-shadow: 4px 5px 0 rgba(4, 20, 148, 0.15);
+    text-align: center;
+}
+
+.diario-eyebrow {
+    display: block;
+    color: #7180c9;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.diario-intro h1 {
+    margin: 8px 0;
+    color: #041494;
+    font-size: clamp(32px, 5vw, 42px);
+    font-weight: 400;
+}
+
+.diario-intro p {
+    max-width: 600px;
+    margin: 0 auto;
+    color: #4B63D4;
+    font-size: 19px;
+    line-height: 1.4;
+}
+
+/* Estatísticas */
+
+.diario-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    max-width: 1100px;
+    margin: 0 auto 24px;
+}
+
+.diario-stat-card {
+    min-height: 90px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 22px;
+    background: #fff;
+    border: 2px solid #041494;
+    border-radius: 15px 20px 13px 18px;
+    box-shadow: 3px 4px 0 rgba(4, 20, 148, 0.13);
+}
+
+.diario-stat-card > span {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    background: #edf0ff;
+    border-radius: 14px;
+    font-size: 25px;
+}
+
+.diario-stat-card div {
+    display: flex;
+    flex-direction: column;
+}
+
+.diario-stat-card strong {
+    color: #041494;
+    font-size: 27px;
+    line-height: 1;
+}
+
+.diario-stat-card small {
+    margin-top: 5px;
+    color: #7781ad;
+    font-size: 15px;
+}
+
+/* Layout principal */
+
+.diario-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.6fr);
+    align-items: start;
+    gap: 22px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.diario-calendario,
+.diario-form-card {
+    min-width: 0;
+    padding: 24px;
+    background: #fff;
+    border: 2px solid #041494;
+    border-radius: 18px 14px 20px 13px;
+    box-shadow: 4px 5px 0 rgba(4, 20, 148, 0.15);
+}
+
+/* Cabeçalhos dos cards */
+
+.diario-calendario-header,
+.diario-form-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.diario-calendario-header h2,
+.diario-form-header h2 {
+    margin: 5px 0 0;
+    color: #041494;
+    font-size: 27px;
+    font-weight: 400;
+    text-transform: capitalize;
+}
+
+/* Navegação do calendário */
+
+.diario-mes-acoes {
+    display: flex;
+    gap: 5px;
+}
+
+.diario-mes-acoes button {
+    width: 36px;
+    height: 36px;
+    border: 1px solid #d9def8;
+    border-radius: 9px;
+    background: #f5f6ff;
+    color: #041494;
+    font-family: inherit;
+    font-size: 25px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.diario-mes-acoes button:hover:not(:disabled) {
+    background: #e5e9ff;
+    transform: translateY(-1px);
+}
+
+.diario-mes-acoes button:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+/* Grade do calendário */
+
+.diario-calendario-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 5px;
+}
+
+.diario-dia-semana {
+    padding: 8px 2px;
+    color: #929abd;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.diario-dia {
+    position: relative;
+    min-width: 0;
+    aspect-ratio: 1;
+    border: 1px solid #e9ebf8;
+    border-radius: 9px;
+    background: #fff;
+    color: #041494;
+    font-family: inherit;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.15s, border 0.15s;
+}
+
+.diario-dia:hover:not(:disabled) {
+    background: #f4f5ff;
+    border-color: #9ba8ed;
+}
+
+.diario-dia.hoje {
+    border: 2px solid #7588e7;
+}
+
+.diario-dia.selecionado {
+    border: 2px solid #041494;
+    background: #041494;
+    color: #fff;
+}
+
+.diario-dia:disabled {
+    color: #c8ccdc;
+    cursor: not-allowed;
+    background: #fafbfe;
+    opacity: 0.65;
+}
+
+.diario-dia i {
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #7185df;
+    transform: translateX(-50%);
+}
+
+.diario-dia.selecionado i {
+    background: #fff;
+}
+
+/* Legenda */
+
+.diario-legenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 18px;
+    color: #8790b4;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+}
+
+.diario-legenda span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.diario-legenda i {
+    width: 9px;
+    height: 9px;
+    display: inline-block;
+    border-radius: 50%;
+}
+
+.legenda-registro {
+    background: #7185df;
+}
+
+.legenda-hoje {
+    border: 1px solid #7185df;
+}
+
+/* Histórico */
+
+.diario-historico {
+    margin-top: 27px;
+    padding-top: 20px;
+    border-top: 1px solid #edf0fa;
+}
+
+.diario-historico h3 {
+    margin: 0 0 13px;
+    color: #041494;
+    font-size: 20px;
+}
+
+.diario-sem-historico {
+    color: #929abb;
+    font-size: 15px;
+}
+
+.historico-item {
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    border: 1px solid #e9ecfa;
+    border-radius: 10px;
+    background: #fafbff;
+    color: #53628f;
+    font-family: inherit;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.15s, border 0.15s;
+}
+
+.historico-item:hover,
+.historico-item.ativo {
+    border-color: #9ba8ed;
+    background: #eef0ff;
+    color: #041494;
+}
+
+.diario-status {
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: #e2f4e8;
+    color: #438457;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+/* Formulário */
+
+.diario-form-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.diario-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.diario-campo label {
+    color: #041494;
+    font-size: 19px;
+    font-weight: 400;
+}
+
+.diario-campo label > span {
+    margin-right: 5px;
+    color: #657bd5;
+}
+
+.diario-campo textarea {
+    width: 100%;
+    min-height: 105px;
+    padding: 12px;
+    resize: vertical;
+    border: 1px solid #dce1f3;
+    border-radius: 8px;
+    outline: none;
+    background: #fafbff;
+    color: #263c9d;
+    font-family: inherit;
+    font-size: 16px;
+    line-height: 1.5;
+    box-shadow: 2px 2px 0 #e5e9fa;
+    transition: 0.2s ease;
+}
+
+.diario-campo textarea::placeholder {
+    color: #a4abc4;
+}
+
+.diario-campo textarea:focus {
+    border-color: #041494;
+    box-shadow: 3px 3px 0 #4B63D4;
+}
+
+/* Seleção de humor */
+
+.diario-humores {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 8px;
+}
+
+.diario-humores button {
+    min-width: 0;
+    padding: 12px 4px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    border: 1px solid #dce1f3;
+    border-radius: 10px 13px 9px 12px;
+    background: #fafbff;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.diario-humores button:hover {
+    border-color: #7185df;
+    background: #eef0ff;
+}
+
+.diario-humores button.humor-selecionado {
+    border: 2px solid #041494;
+    padding: 11px 3px;
+    background: #eef0ff;
+    box-shadow: 2px 2px 0 #4B63D4;
+}
+
+.diario-humores button span {
+    font-size: 27px;
+}
+
+.diario-humores button small {
+    color: #7480a5;
+    font-family: inherit;
+    font-size: 13px;
+    text-align: center;
+}
+
+/* Botões do formulário */
+
+.diario-form-acoes {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 5px;
+}
+
+.diario-salvar,
+.diario-excluir {
+    min-height: 43px;
+    padding: 10px 20px;
+    border-radius: 9px 12px 8px 11px;
+    font-family: inherit;
+    font-size: 17px;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.diario-salvar {
+    border: 2px solid #041494;
+    background: #041494;
+    color: #fff;
+    box-shadow: 3px 3px 0 #4B63D4;
+}
+
+.diario-salvar:hover:not(:disabled) {
+    transform: translate(-1px, -1px);
+    background: #172ba9;
+    box-shadow: 4px 4px 0 #4B63D4;
+}
+
+.diario-excluir {
+    border: 2px solid #bd6a6a;
+    background: #fff;
+    color: #bd6a6a;
+    box-shadow: 2px 2px 0 rgba(189, 106, 106, 0.2);
+}
+
+.diario-excluir:hover:not(:disabled) {
+    background: #fff0f0;
+    transform: translateY(-1px);
+}
+
+.diario-salvar:disabled,
+.diario-excluir:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Alertas */
+
+.diario-alerta {
+    max-width: 1100px;
+    margin: 0 auto 18px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-radius: 10px;
+    font-size: 16px;
+}
+
+.diario-alerta.erro {
+    border: 2px solid #c84b4b;
+    background: #fff0f0;
+    color: #a32929;
+}
+
+.diario-alerta.sucesso {
+    border: 2px solid #78bb8c;
+    background: #f3faf5;
+    color: #438457;
+}
+
+.diario-alerta button {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.diario-carregando {
+    padding: 30px 0;
+    color: #fff;
+    text-align: center;
+    font-size: 18px;
+}
+
+/* Responsividade */
+
+@media (max-width: 900px) {
+    .diario-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .diario-container {
+        padding: 18px 12px 35px;
+    }
+
+    .diario-intro {
+        margin-top: 20px;
+        padding: 18px 15px;
+    }
+
+    .diario-intro h1 {
+        font-size: 32px;
+    }
+
+    .diario-intro p {
+        font-size: 17px;
+    }
+
+    .diario-stats {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .diario-stat-card {
+        min-height: 70px;
+        padding: 12px 16px;
+    }
+
+    .diario-stat-card > span {
+        width: 38px;
+        height: 38px;
+        font-size: 23px;
+    }
+
+    .diario-stat-card strong {
+        font-size: 24px;
+    }
+
+    .diario-calendario,
+    .diario-form-card {
+        padding: 15px;
+    }
+
+    .diario-calendario-header h2,
+    .diario-form-header h2 {
+        font-size: 23px;
+    }
+
+    .diario-calendario-grid {
+        gap: 3px;
+    }
+
+    .diario-dia {
+        border-radius: 7px;
+        font-size: 14px;
+    }
+
+    .diario-legenda {
+        gap: 9px;
+        font-size: 10px;
+    }
+
+    .diario-humores {
+        gap: 4px;
+    }
+
+    .diario-humores button {
+        padding: 10px 2px;
+    }
+
+    .diario-humores button span {
+        font-size: 23px;
+    }
+
+    .diario-humores button small {
+        font-size: 11px;
+    }
+
+    .diario-form-acoes {
+        flex-direction: column-reverse;
+    }
+
+    .diario-salvar,
+    .diario-excluir {
+        width: 100%;
+    }
+}
+
+@media (max-width: 380px) {
+    .diario-calendario,
+    .diario-form-card {
+        padding: 11px;
+    }
+
+    .diario-humores button small {
+        font-size: 10px;
+    }
+
+    .diario-mes-acoes button {
+        width: 30px;
+        height: 34px;
+    }
+}

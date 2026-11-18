@@ -1,6 +1,8 @@
+
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import Progresso from "./pages/Progresso";
+import Diario from "./pages/Diario";
 import Cadastro from "./components/Cadastro";
 import Login from "./components/Login";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
@@ -30,13 +32,22 @@ function Rotas() {
       />
 
       <Route
-    path="/progresso"
-    element={
-        <ProtectedRoute>
+        path="/progresso"
+        element={
+          <ProtectedRoute>
             <Progresso />
-        </ProtectedRoute>
-    }
-/>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/diario"
+        element={
+          <ProtectedRoute>
+            <Diario />
+          </ProtectedRoute>
+        }
+      />
 
       <Route
         path="/login"

@@ -470,3 +470,244 @@
         font-size: 14px;
     }
 }
+
+/* =========================================
+   PADRONIZAÇÃO VISUAL COM A PÁGINA DE METAS
+========================================= */
+
+.progresso-container {
+    min-height: 100vh;
+    width: 100%;
+    padding: 28px 5%;
+    background: #4B63D4;
+    color: #041494;
+    font-family: 'Patrick Hand', sans-serif;
+}
+
+.progresso-container button,
+.progresso-container a {
+    font-family: inherit;
+}
+
+.progresso-header,
+.estatisticas-grid,
+.progresso-content,
+.resumo-sequencia {
+    width: 100%;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Introdução */
+
+.progresso-intro {
+    padding: 26px 30px;
+    background: #fff;
+    border: 2px solid #041494;
+    border-radius: 18px 14px 20px 13px;
+    box-shadow: 4px 5px 0 rgba(4, 20, 148, 0.15);
+}
+
+.progresso-intro > span,
+.progresso-label {
+    color: #7180c9;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.progresso-intro h1 {
+    margin: 8px 0;
+    color: #041494;
+    font-size: clamp(32px, 5vw, 38px);
+    font-weight: 400;
+}
+
+.progresso-intro p {
+    margin: 0;
+    color: #7781ad;
+    font-size: 19px;
+    line-height: 1.5;
+}
+
+/* Cards de estatísticas */
+
+.estatistica-card {
+    min-height: 125px;
+    padding: 18px 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 6px;
+    background: #fff;
+    border: 2px solid #041494;
+    border-radius: 15px 20px 13px 18px;
+    box-shadow: 3px 4px 0 rgba(4, 20, 148, 0.13);
+}
+
+.estatistica-icon {
+    background: #edf0ff;
+    border-radius: 14px;
+}
+
+.estatistica-card strong {
+    color: #041494;
+    font-size: 30px;
+    font-weight: 400;
+}
+
+.estatistica-card > span:last-child {
+    color: #7781ad;
+    font-size: 15px;
+}
+
+/* Cards principais */
+
+.progresso-card {
+    min-width: 0;
+    padding: 24px;
+    background: #fff;
+    border: 2px solid #041494;
+    border-radius: 18px 14px 20px 13px;
+    box-shadow: 4px 5px 0 rgba(4, 20, 148, 0.15);
+}
+
+.progresso-card h2 {
+    margin: 5px 0 0;
+    color: #041494;
+    font-size: 25px;
+    font-weight: 400;
+}
+
+.grafico-periodo {
+    background: #edf0ff;
+    border-radius: 9px;
+    color: #5368c4;
+}
+
+/* Gráfico */
+
+.grafico-barra-fundo {
+    background: #e9edff;
+    border-radius: 9px 9px 5px 5px;
+}
+
+.grafico-barra {
+    background: #5c76df;
+}
+
+.grafico-coluna > span {
+    color: #7781ad;
+}
+
+.grafico-legenda {
+    color: #8994bd;
+}
+
+/* Calendário de atividade */
+
+.mes-atual {
+    color: #041494;
+}
+
+.heatmap-dia-semana {
+    color: #929abd;
+}
+
+.heatmap-dia {
+    background: #f5f6ff;
+    border: 1px solid #e9ebf8;
+    border-radius: 9px;
+    color: #041494;
+}
+
+.heatmap-dia.ativo {
+    background: #5c76df;
+    border-color: #5c76df;
+    color: #fff;
+}
+
+.heatmap-dia.planejado {
+    background: #e2e7ff;
+    border-color: #dce2ff;
+}
+
+.heatmap-legenda {
+    color: #8790b4;
+}
+
+.heatmap-inativo {
+    background: #f5f6ff;
+    border: 1px solid #e9ebf8;
+}
+
+.heatmap-ativo {
+    background: #5c76df;
+}
+
+/* Resumo da sequência */
+
+.resumo-sequencia {
+    margin-top: 20px;
+    padding: 22px 25px;
+    display: flex;
+    align-items: center;
+    gap: 17px;
+    background: #fff;
+    border: 2px solid #041494;
+    border-radius: 18px 14px 20px 13px;
+    box-shadow: 4px 5px 0 rgba(4, 20, 148, 0.15);
+}
+
+.sequencia-icon {
+    background: #edf0ff;
+    border-radius: 14px;
+}
+
+.resumo-sequencia h2 {
+    color: #041494;
+    font-weight: 400;
+}
+
+.resumo-sequencia p {
+    color: #7781ad;
+}
+
+/* Carregamento */
+
+.progresso-loading {
+    background: #fff;
+    border: 2px solid #041494;
+    border-radius: 15px 20px 13px 18px;
+    box-shadow: 3px 4px 0 rgba(4, 20, 148, 0.13);
+    color: #041494;
+}
+
+/* Responsividade */
+
+@media (max-width: 600px) {
+    .progresso-container {
+        padding: 18px 12px;
+    }
+
+    .progresso-intro {
+        padding: 20px 17px;
+    }
+
+    .progresso-card {
+        padding: 15px;
+    }
+
+    .estatistica-card {
+        min-height: 110px;
+        padding: 13px;
+    }
+
+    .resumo-sequencia {
+        padding: 17px;
+    }
+}

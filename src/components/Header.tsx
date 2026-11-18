@@ -38,6 +38,10 @@ function Header() {
                 <NavLink to="/progresso">
                     Meu progresso
                 </NavLink>
+
+                <NavLink to="/diario">
+                    Diário
+                </NavLink>
             </nav>
 
             <div className="header-account">
