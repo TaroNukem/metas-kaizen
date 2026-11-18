@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import { createContext, useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
 import type { User } from "@supabase/supabase-js"
 
@@ -14,7 +14,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [carregando, setCarregando] = useState(true)
 
     useEffect(() => {
-        const { data } = supabase.auth.onAuthStateChange((event, session) => {
+        const { data } = supabase.auth.onAuthStateChange((_event, session) => {
             setUsuario(session?.user ?? null)
             setCarregando(false)
         })
